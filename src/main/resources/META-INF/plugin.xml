@@ -1,0 +1,29 @@
+<idea-plugin>
+    <id>com.se.sptcode.code_completion_plugin</id>
+    <name>sptcode_completion</name>
+    <vendor email="littlebowlnju@163.com" url="">littlebowlnju</vendor>
+    <description><![CDATA[
+    This plugin can support JAVA code completion.
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <completion.contributor language="any" implementationClass="SPTCompletionContributor" order="first"/>
+    </extensions>
+
+    <actions>
+        <group id="PluginTest" text="Auto code completion" description="Auto code completion">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action id="Plugin.Test.Action"
+                    class="ui.ConfigAction"
+                    text="config" description="Auto code completion"/>
+        </group>
+    </actions>
+</idea-plugin>
