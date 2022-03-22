@@ -31,7 +31,7 @@ public class SPTCompletionContributor extends CompletionContributor{
 //                "int b = 1",
 //                "b = b - 1"
 //        };
-//        String[] prediction_scores = new String[]{
+//        String[] predictionScores = new String[]{
 //                "44.96%", "25.78%", "19.99%", "17.22%", "11.56%"
 //        };
         for (int i = 0; i < Math.max(5, maxCompletions); ++i) {
@@ -39,6 +39,8 @@ public class SPTCompletionContributor extends CompletionContributor{
                     i,
                     (String)predictions.get(i),
                     (String)predictionScores.get(i)
+//                    predictions[i],
+//                    predictionScores[i]
             );
             completions.add(completion);
         }
@@ -65,23 +67,9 @@ public class SPTCompletionContributor extends CompletionContributor{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        PrefixMatcher originalMatcher = result.getPrefixMatcher();
         if (completions != null) {
-            result.withRelevanceSorter(CompletionSorter.defaultSorter(parameters, originalMatcher).weigh(new SPTWeigher()));
-//            result = result.withPrefixMatcher(new MyPrefixMatcher(originalMatcher.cloneWithPrefix("")));
-//            result = result.withRelevanceSorter(CompletionSorter.defaultSorter(parameters, originalMatcher).weigh(new MyWeigher()));
-            //result.restartCompletionOnAnyPrefixChange();
-
-//            if (completions.user_message.length >= 1) {
-//                String firstMsg = completions.user_message[0];
-//                if (firstMsg.length() <= ADVERTISEMENT_MAX_LENGTH) {
-//                    result.addLookupAdvertisement(firstMsg);
-//                }
-//            }
-//            if (originalMatcher.getPrefix().length() == 0 && completions.results.length == 0) {
-//                result.stopHere();
-//                return;
-//            }
+            // sort completions by their index(score)
+            result = result.withRelevanceSorter(CompletionSorter.emptySorter().weigh(new SPTWeigher()));
             result.addAllElements(completions);
         }
     }
