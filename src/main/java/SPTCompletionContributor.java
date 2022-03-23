@@ -15,13 +15,19 @@ import java.util.*;
 public class SPTCompletionContributor extends CompletionContributor{
 
     public ArrayList<LookupElement> retrieveCompletions(CompletionParameters parameters, int maxCompletions) throws Exception {
-        ArrayList<LookupElement> completions = new ArrayList<>();
+        ArrayList<LookupElement> completions = new ArrayList<>();long start, end;
+        start = System.currentTimeMillis();
         PsiElement element = parameters.getPosition();
         PsiMethod containingMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
         String source = containingMethod.getText();
         source = source.replace("??IntellijIdeaRulezzz", "PRED");
         System.out.println(source);
+        end = System.currentTimeMillis();
+        System.out.println("get Method: " + (end-start) + "ms");
+        start = System.currentTimeMillis();
         JSONObject predictionObject = HttpUtils.doPost(source);
+        end = System.currentTimeMillis();
+        System.out.println("do Post: "+ (end-start) + "ms");
         JSONArray predictions = (JSONArray) predictionObject.get("predictions");
         JSONArray predictionScores = (JSONArray) predictionObject.get("prediction_scores");
 //        String[] predictions = new String[] {
@@ -68,9 +74,13 @@ public class SPTCompletionContributor extends CompletionContributor{
             e.printStackTrace();
         }
         if (completions != null) {
+            long start, end;
+            start = System.currentTimeMillis();
             // sort completions by their index(score)
             result = result.withRelevanceSorter(CompletionSorter.emptySorter().weigh(new SPTWeigher()));
             result.addAllElements(completions);
+            end = System.currentTimeMillis();
+            System.out.println("show: " + (end-start) + "ms");
         }
     }
 
